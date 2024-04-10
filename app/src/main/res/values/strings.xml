@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Modulo 6 Practica 1</string>
+    <string name="add_element">Add element</string>
+    <string name="no_data">¡No hay registros!</string>
+    <string name="account_image">Imagen de la cuenta</string>
+</resources>
