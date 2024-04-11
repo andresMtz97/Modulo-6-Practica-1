@@ -1,21 +1,22 @@
 package martinez.andres.modulo6practica1.ui.adapters
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
+import martinez.andres.modulo6practica1.R
 import martinez.andres.modulo6practica1.data.db.model.TransactionEntity
 
 class TransactionAdapter(
     private val transactions: List<TransactionEntity>
 ): Adapter<TransactionViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
-        TODO("Not yet implemented")
+        val layoutInflater = LayoutInflater.from(parent.context)
+        return TransactionViewHolder(layoutInflater.inflate(R.layout.transaction_element, parent, false))
     }
 
-    override fun getItemCount(): Int {
-        TODO("Not yet implemented")
-    }
+    override fun getItemCount(): Int = transactions.size
 
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        holder.render(transactions[position])
     }
 }

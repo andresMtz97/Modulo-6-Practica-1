@@ -1,5 +1,6 @@
 package martinez.andres.modulo6practica1.data.db
 
+import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
@@ -7,6 +8,7 @@ import androidx.room.Update
 import martinez.andres.modulo6practica1.data.db.model.TransactionEntity
 import martinez.andres.modulo6practica1.util.Constants
 
+@Dao
 interface PracticaDao {
 
     @Insert

@@ -10,6 +10,7 @@ class TransactionViewHolder(view: View): ViewHolder(view) {
     private val binding = TransactionElementBinding.bind(view)
 
     fun render(transaction: TransactionEntity) {
-
+        binding.tvAmount.text = transaction.amount.toString()
+        binding.tvDescription.text = transaction.description
     }
 }

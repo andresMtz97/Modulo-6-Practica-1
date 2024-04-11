@@ -3,4 +3,15 @@
     <string name="add_element">Add element</string>
     <string name="no_data">¡No hay registros!</string>
     <string name="account_image">Imagen de la cuenta</string>
+    <string name="amount">Monto</string>
+    <string name="description">Descripción</string>
+    <string name="header">Header</string>
+    <string name="transaction">Transacción</string>
+    <string name="save">Guardar</string>
+    <string name="update">Actualizar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="add_error">Error al guardar %s</string>
+    <string name="update_error">Error al actualizar %s</string>
+    <string name="add_success">%s guardada exitosamente</string>
+    <string name="update_success">%s actualizada exitosamente</string>
 </resources>
