@@ -2,8 +2,11 @@ package martinez.andres.modulo6practica1.ui
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.launch
 import martinez.andres.modulo6practica1.application.PracticaApp
 import martinez.andres.modulo6practica1.data.PracticaRepository
 import martinez.andres.modulo6practica1.data.db.model.TransactionEntity
@@ -11,7 +14,6 @@ import martinez.andres.modulo6practica1.databinding.ActivityMainBinding
 import martinez.andres.modulo6practica1.ui.adapters.TransactionAdapter
 import martinez.andres.modulo6practica1.util.Constants
 import martinez.andres.modulo6practica1.util.sbMessage
-import martinez.andres.modulo6practica1.util.toast
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,12 +46,23 @@ class MainActivity : AppCompatActivity() {
             adapter = transactionAdapter
             layoutManager = LinearLayoutManager(this@MainActivity)
         }
+        updateRV()
+    }
+
+    private fun updateRV() {
+        lifecycleScope.launch {
+            transactions = repository.getTransactions()
+            binding.tvNoData.visibility =
+                if (transactions.isEmpty()) View.VISIBLE else View.INVISIBLE
+            transactionAdapter.updateList(transactions)
+        }
     }
 
     private fun initListeners() {
         binding.fabAddTransaction.setOnClickListener {
             Log.i(Constants.LOG_TAG, "Presiono boton add")
             val dialog = EditTransactionDialog(
+                updateRV = { updateRV() },
                 message = { text, bgColor -> sbMessage(binding.root, text, bgColor) }
             )
 

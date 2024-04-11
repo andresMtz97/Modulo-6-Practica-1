@@ -7,7 +7,7 @@ import martinez.andres.modulo6practica1.R
 import martinez.andres.modulo6practica1.data.db.model.TransactionEntity
 
 class TransactionAdapter(
-    private val transactions: List<TransactionEntity>
+    private var transactions: List<TransactionEntity>
 ): Adapter<TransactionViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -18,5 +18,10 @@ class TransactionAdapter(
 
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
         holder.render(transactions[position])
+    }
+
+    fun updateList(list: List<TransactionEntity>) {
+        transactions = list
+        notifyDataSetChanged()
     }
 }

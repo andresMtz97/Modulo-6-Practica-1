@@ -1,13 +1,10 @@
 package martinez.andres.modulo6practica1.ui
 
-import android.app.Activity
 import android.app.AlertDialog.Builder
 import android.app.Dialog
 import android.os.Bundle
-import android.os.Message
 import android.util.Log
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat.getColor
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +27,7 @@ class EditTransactionDialog(
         description = "",
         account = ""
     ),
+    private val updateRV: () -> Unit,
     private val message: (String, Int) -> Unit
 ) : DialogFragment() {
 
@@ -48,7 +46,7 @@ class EditTransactionDialog(
 
         repository = (requireContext().applicationContext as PracticaApp).repository
 
-        var btnText = if (edit) getString(R.string.update) else getString(R.string.save)
+        val btnText = if (edit) getString(R.string.update) else getString(R.string.save)
         dialog = buildDialog(btnText, getString(R.string.cancel)) {
             transaction.apply {
                 amount = binding.tietAmount.text.toString().toDouble()
@@ -56,24 +54,32 @@ class EditTransactionDialog(
             }
 
             var errorMessage = ""
-            var successMessage = ""
+            var successMessage: String
             try {
                 lifecycleScope.launch(Dispatchers.IO) {
 
                     val result =
                         if (edit) {
-                            errorMessage = getString(R.string.update_error, getString(R.string.transaction))
-                            successMessage = getString(R.string.update_success, getString(R.string.transaction))
+                            errorMessage =
+                                getString(R.string.update_error, getString(R.string.transaction))
+                            successMessage =
+                                getString(R.string.update_success, getString(R.string.transaction))
                             async { repository.updateTransaction(transaction) }
-                        } else{
-                            errorMessage = getString(R.string.add_error, getString(R.string.transaction))
-                            successMessage = getString(R.string.add_success, getString(R.string.transaction))
+                        } else {
+                            errorMessage =
+                                getString(R.string.add_error, getString(R.string.transaction))
+                            successMessage =
+                                getString(R.string.add_success, getString(R.string.transaction))
                             async { repository.insertTransaction(transaction) }
                         }
                     result.await()
 
                     withContext(Dispatchers.Main) {
-                        message(successMessage, ContextCompat.getColor(requireContext(), R.color.success))
+                        message(
+                            successMessage,
+                            ContextCompat.getColor(requireContext(), R.color.success)
+                        )
+                        updateRV()
                     }
                 }
             } catch (e: IOException) {

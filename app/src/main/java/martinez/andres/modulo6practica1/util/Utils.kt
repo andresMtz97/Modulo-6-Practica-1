@@ -2,7 +2,6 @@ package martinez.andres.modulo6practica1.util
 
 import android.app.Activity
 import android.content.Context
-import android.graphics.Color
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -23,7 +22,7 @@ fun Activity.sbMessage(
     Snackbar.make(view, text, length).setTextColor(textColor).setBackgroundTint(bgColor).show()
 }
 
-//fun View.hideKeyboard() {
-//    val inputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//    inputManager.hideSoftInputFromWindow(windowToken, 0)
-//}
+fun View.hideKeyboard() {
+    val inputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputManager.hideSoftInputFromWindow(windowToken, 0)
+}
