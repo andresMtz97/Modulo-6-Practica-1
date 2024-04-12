@@ -18,6 +18,8 @@ import martinez.andres.modulo6practica1.data.db.model.TransactionEntity
 import martinez.andres.modulo6practica1.databinding.DialogEditTransactionBinding
 import martinez.andres.modulo6practica1.util.Constants
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 class EditTransactionDialog(
     private var edit: Boolean = false,
@@ -41,16 +43,22 @@ class EditTransactionDialog(
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         _binding = DialogEditTransactionBinding.inflate(requireActivity().layoutInflater)
-
+        repository = (requireContext().applicationContext as PracticaApp).repository
         builder = Builder(requireContext())
 
-        repository = (requireContext().applicationContext as PracticaApp).repository
+        binding.apply {
+            tietAmount.setText(transaction.amount.toString())
+            tietDescription.setText(transaction.description)
+            tietDate.setText(transaction.date)
+            tietDate.setOnClickListener { showDatePickerDialog() }
+        }
 
         val btnText = if (edit) getString(R.string.update) else getString(R.string.save)
         dialog = buildDialog(btnText, getString(R.string.cancel)) {
             transaction.apply {
                 amount = binding.tietAmount.text.toString().toDouble()
                 description = binding.tietDescription.text.toString()
+                date = binding.tietDate.text.toString()
             }
 
             var errorMessage = ""
@@ -101,11 +109,26 @@ class EditTransactionDialog(
         negativeBtnText: String,
         positiveButton: () -> Unit,
     ): Dialog = builder.setView(binding.root)
-        .setTitle(getString(R.string.transaction))
+        .setTitle(if (edit) getString(R.string.update_transaction) else getString(R.string.add_transaction))
         .setPositiveButton(positiveBtnText) { _, _ ->
             positiveButton()
         }
         .setNegativeButton(negativeBtnText) { _, _ -> }
         .create()
 
+    private fun showDatePickerDialog() {
+        val datePicker = DatePickerFragment(binding.tietDate.text.toString()) { day, month, year ->
+            onDateSelected(day, month, year)
+        }
+        datePicker.show(parentFragmentManager, "datePicker")
+    }
+
+    private fun onDateSelected(day: Int, month: Int, year: Int) {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.DAY_OF_MONTH, day)
+        calendar.set(Calendar.MONTH, month)
+        calendar.set(Calendar.YEAR, year)
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy")
+        binding.tietDate.setText(dateFormat.format(calendar.time))
+    }
 }

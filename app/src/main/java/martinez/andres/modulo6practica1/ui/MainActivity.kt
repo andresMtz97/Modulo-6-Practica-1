@@ -1,5 +1,6 @@
 package martinez.andres.modulo6practica1.ui
 
+import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,6 +15,7 @@ import martinez.andres.modulo6practica1.databinding.ActivityMainBinding
 import martinez.andres.modulo6practica1.ui.adapters.TransactionAdapter
 import martinez.andres.modulo6practica1.util.Constants
 import martinez.andres.modulo6practica1.util.sbMessage
+import martinez.andres.modulo6practica1.util.toast
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,7 +43,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initRV() {
-        transactionAdapter = TransactionAdapter(transactions)
+        transactionAdapter =
+            TransactionAdapter(transactions) { transaction -> showEditDialog(transaction) }
         binding.rvTransactions.apply {
             adapter = transactionAdapter
             layoutManager = LinearLayoutManager(this@MainActivity)
@@ -60,13 +63,28 @@ class MainActivity : AppCompatActivity() {
 
     private fun initListeners() {
         binding.fabAddTransaction.setOnClickListener {
-            Log.i(Constants.LOG_TAG, "Presiono boton add")
-            val dialog = EditTransactionDialog(
-                updateRV = { updateRV() },
-                message = { text, bgColor -> sbMessage(binding.root, text, bgColor) }
-            )
-
+            val dialog = buildEditTransactionDialog()
             dialog.show(supportFragmentManager, "dialogAdd")
         }
     }
+
+    private fun showEditDialog(transaction: TransactionEntity) {
+        val dialog = buildEditTransactionDialog(true, transaction)
+        dialog.show(supportFragmentManager, "dialogUpdate")
+    }
+
+    private fun buildEditTransactionDialog(
+        edit: Boolean = false,
+        transaction: TransactionEntity = TransactionEntity(
+            amount = 0.0,
+            date = "",
+            description = "",
+            account = ""
+        )
+    ): EditTransactionDialog = EditTransactionDialog(
+        edit,
+        transaction,
+        { updateRV() },
+        { text, bgColor -> sbMessage(binding.root, text, bgColor) }
+    )
 }

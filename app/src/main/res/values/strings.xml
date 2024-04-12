@@ -14,4 +14,8 @@
     <string name="update_error">Error al actualizar %s</string>
     <string name="add_success">%s guardada exitosamente</string>
     <string name="update_success">%s actualizada exitosamente</string>
+    <string name="update_transaction">Editar Transacción</string>
+    <string name="add_transaction">Crear Transacción</string>
+    <string name="date">Fecha</string>
+    <string name="date_format">%d/%d/%d</string>
 </resources>
