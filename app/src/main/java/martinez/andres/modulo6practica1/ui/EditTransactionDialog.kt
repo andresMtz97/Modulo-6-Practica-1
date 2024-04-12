@@ -4,6 +4,8 @@ import android.app.AlertDialog.Builder
 import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.AdapterView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
@@ -14,8 +16,11 @@ import kotlinx.coroutines.withContext
 import martinez.andres.modulo6practica1.R
 import martinez.andres.modulo6practica1.application.PracticaApp
 import martinez.andres.modulo6practica1.data.PracticaRepository
+import martinez.andres.modulo6practica1.data.db.model.Account
+import martinez.andres.modulo6practica1.data.db.model.Accounts
 import martinez.andres.modulo6practica1.data.db.model.TransactionEntity
 import martinez.andres.modulo6practica1.databinding.DialogEditTransactionBinding
+import martinez.andres.modulo6practica1.ui.adapters.AccountArrayAdapter
 import martinez.andres.modulo6practica1.util.Constants
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -46,6 +51,8 @@ class EditTransactionDialog(
         repository = (requireContext().applicationContext as PracticaApp).repository
         builder = Builder(requireContext())
 
+        setupAccountSpinner()
+
         binding.apply {
             tietAmount.setText(transaction.amount.toString())
             tietDescription.setText(transaction.description)
@@ -59,6 +66,10 @@ class EditTransactionDialog(
                 amount = binding.tietAmount.text.toString().toDouble()
                 description = binding.tietDescription.text.toString()
                 date = binding.tietDate.text.toString()
+                account = if (binding.accountSpinner.selectedItemPosition != 0)
+                    (binding.accountSpinner.selectedItem as Account).name
+                else
+                    ""
             }
 
             var errorMessage = ""
@@ -130,5 +141,26 @@ class EditTransactionDialog(
         calendar.set(Calendar.YEAR, year)
         val dateFormat = SimpleDateFormat("dd/MM/yyyy")
         binding.tietDate.setText(dateFormat.format(calendar.time))
+    }
+
+    private fun setupAccountSpinner() {
+        val spinnerAdapter = AccountArrayAdapter(requireContext(), Accounts.list!!)
+        binding.accountSpinner.apply {
+            adapter = spinnerAdapter
+//            onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+//                override fun onItemSelected(
+//                    parent: AdapterView<*>?,
+//                    view: View?,
+//                    position: Int,
+//                    id: Long
+//                ) {
+//                    val selectedItem = parent!!.getItemAtPosition(position) as Account
+//                    transaction.account = selectedItem.name
+//                }
+//
+//                override fun onNothingSelected(parent: AdapterView<*>?) { }
+//            }
+        }
+
     }
 }

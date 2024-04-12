@@ -4,10 +4,8 @@ import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.widget.DatePicker
 import androidx.fragment.app.DialogFragment
-import martinez.andres.modulo6practica1.util.Constants
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
