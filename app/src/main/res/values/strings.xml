@@ -18,4 +18,9 @@
     <string name="add_transaction">Crear Transacción</string>
     <string name="date">Fecha</string>
     <string name="date_format">%d/%d/%d</string>
+    <string name="delete_transaction">Eliminar transacción</string>
+    <string name="delete_message">¿Realmente quieres eliminar la transacción realizada el día %s en la cuenta %s por el monto de $%s?</string>
+    <string name="accept">Aceptar</string>
+    <string name="delete_success">%s eliminada exitosamente</string>
+    <string name="delete_error">Error al eliminar %s</string>
 </resources>

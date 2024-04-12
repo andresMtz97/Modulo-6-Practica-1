@@ -10,7 +10,11 @@ class TransactionViewHolder(view: View) : ViewHolder(view) {
 
     private val binding = TransactionElementBinding.bind(view)
 
-    fun render(transaction: TransactionEntity, onItemClicked: (TransactionEntity) -> Unit) {
+    fun render(
+        transaction: TransactionEntity,
+        onItemClicked: (TransactionEntity) -> Unit,
+        onItemDelete: (TransactionEntity) -> Unit
+    ) {
         binding.tvAmount.text = transaction.amount.toString()
         binding.tvDescription.text = transaction.description
         binding.tvDate.text = transaction.date
@@ -20,6 +24,10 @@ class TransactionViewHolder(view: View) : ViewHolder(view) {
 
         itemView.setOnClickListener {
             onItemClicked(transaction)
+        }
+
+        binding.ivDelete.setOnClickListener {
+            onItemDelete(transaction)
         }
     }
 }

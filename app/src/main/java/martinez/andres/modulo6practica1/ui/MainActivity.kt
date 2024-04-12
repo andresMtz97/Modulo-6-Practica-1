@@ -1,21 +1,23 @@
 package martinez.andres.modulo6practica1.ui
 
-import android.app.Dialog
+import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import martinez.andres.modulo6practica1.R
 import martinez.andres.modulo6practica1.application.PracticaApp
 import martinez.andres.modulo6practica1.data.PracticaRepository
 import martinez.andres.modulo6practica1.data.db.model.TransactionEntity
 import martinez.andres.modulo6practica1.databinding.ActivityMainBinding
 import martinez.andres.modulo6practica1.ui.adapters.TransactionAdapter
-import martinez.andres.modulo6practica1.util.Constants
 import martinez.andres.modulo6practica1.util.sbMessage
-import martinez.andres.modulo6practica1.util.toast
+import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,8 +45,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initRV() {
-        transactionAdapter =
-            TransactionAdapter(transactions) { transaction -> showEditDialog(transaction) }
+        transactionAdapter = TransactionAdapter(
+            transactions,
+            { transaction -> showEditDialog(transaction) },
+            { transaction -> showDeleteDialog(transaction) }
+        )
         binding.rvTransactions.apply {
             adapter = transactionAdapter
             layoutManager = LinearLayoutManager(this@MainActivity)
@@ -87,4 +92,41 @@ class MainActivity : AppCompatActivity() {
         { updateRV() },
         { text, bgColor -> sbMessage(binding.root, text, bgColor) }
     )
+
+    private fun showDeleteDialog(transaction: TransactionEntity) {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.delete_transaction)
+            .setMessage(
+                getString(
+                    R.string.delete_message,
+                    transaction.date,
+                    transaction.account,
+                    transaction.amount.toString()
+                )
+            )
+            .setPositiveButton(R.string.accept) { _, _ ->
+                try {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        val result = async { repository.deleteTransaction(transaction) }
+                        result.await()
+
+                        withContext(Dispatchers.Main) {
+                            sbMessage(
+                                binding.root,
+                                getString(R.string.delete_success, getString(R.string.transaction))
+                            )
+                            updateRV()
+                        }
+                    }
+                } catch (e: IOException) {
+                    sbMessage(
+                        binding.root,
+                        getString(R.string.delete_error, getString(R.string.transaction))
+                    )
+                }
+            }
+            .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
+            .create()
+            .show()
+    }
 }

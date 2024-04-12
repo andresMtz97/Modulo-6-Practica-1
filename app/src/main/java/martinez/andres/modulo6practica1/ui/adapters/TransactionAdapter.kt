@@ -8,17 +8,24 @@ import martinez.andres.modulo6practica1.data.db.model.TransactionEntity
 
 class TransactionAdapter(
     private var transactions: List<TransactionEntity>,
-    private val onItemClicked: (TransactionEntity) -> Unit
-): Adapter<TransactionViewHolder>() {
+    private val onItemClicked: (TransactionEntity) -> Unit,
+    private val onItemDelete: (TransactionEntity) -> Unit
+) : Adapter<TransactionViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        return TransactionViewHolder(layoutInflater.inflate(R.layout.transaction_element, parent, false))
+        return TransactionViewHolder(
+            layoutInflater.inflate(
+                R.layout.transaction_element,
+                parent,
+                false
+            )
+        )
     }
 
     override fun getItemCount(): Int = transactions.size
 
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
-        holder.render(transactions[position], onItemClicked)
+        holder.render(transactions[position], onItemClicked, onItemDelete)
     }
 
     fun updateList(list: List<TransactionEntity>) {

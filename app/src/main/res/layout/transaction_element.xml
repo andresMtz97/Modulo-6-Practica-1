@@ -47,7 +47,7 @@
                 app:layout_constraintStart_toEndOf="@id/ivAccount"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.16"
-                tools:text="$ 0.00"/>
+                tools:text="$ 0.00" />
 
             <TextView
                 android:id="@+id/tvDescription"
@@ -79,9 +79,20 @@
                 app:layout_constraintTop_toBottomOf="@id/tvDescription"
                 tools:text="01/01/2024" />
 
+            <ImageView
+                android:id="@+id/ivDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_trash"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/error"
+                android:contentDescription="@string/account_image" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
     </androidx.cardview.widget.CardView>
 
