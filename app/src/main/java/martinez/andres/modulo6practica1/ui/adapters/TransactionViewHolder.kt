@@ -6,7 +6,7 @@ import martinez.andres.modulo6practica1.data.db.model.Accounts
 import martinez.andres.modulo6practica1.data.db.model.TransactionEntity
 import martinez.andres.modulo6practica1.databinding.TransactionElementBinding
 
-class TransactionViewHolder(view: View): ViewHolder(view) {
+class TransactionViewHolder(view: View) : ViewHolder(view) {
 
     private val binding = TransactionElementBinding.bind(view)
 

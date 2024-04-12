@@ -4,8 +4,6 @@ import android.app.AlertDialog.Builder
 import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.AdapterView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
@@ -58,6 +56,7 @@ class EditTransactionDialog(
             tietDescription.setText(transaction.description)
             tietDate.setText(transaction.date)
             tietDate.setOnClickListener { showDatePickerDialog() }
+            accountSpinner.setSelection(Accounts.accounts.indexOf(transaction.account))
         }
 
         val btnText = if (edit) getString(R.string.update) else getString(R.string.save)
@@ -147,19 +146,6 @@ class EditTransactionDialog(
         val spinnerAdapter = AccountArrayAdapter(requireContext(), Accounts.list!!)
         binding.accountSpinner.apply {
             adapter = spinnerAdapter
-//            onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
-//                override fun onItemSelected(
-//                    parent: AdapterView<*>?,
-//                    view: View?,
-//                    position: Int,
-//                    id: Long
-//                ) {
-//                    val selectedItem = parent!!.getItemAtPosition(position) as Account
-//                    transaction.account = selectedItem.name
-//                }
-//
-//                override fun onNothingSelected(parent: AdapterView<*>?) { }
-//            }
         }
 
     }
