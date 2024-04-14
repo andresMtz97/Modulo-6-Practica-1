@@ -1,10 +1,15 @@
 package martinez.andres.modulo6practica1.ui
 
+import android.app.AlertDialog
 import android.app.AlertDialog.Builder
 import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.AdapterView
+import android.widget.Button
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -41,6 +46,7 @@ class EditTransactionDialog(
 
     private lateinit var builder: Builder
     private lateinit var dialog: Dialog
+    private var saveButton: Button? = null
 
     private lateinit var repository: PracticaRepository
 
@@ -75,7 +81,6 @@ class EditTransactionDialog(
             var successMessage: String
             try {
                 lifecycleScope.launch(Dispatchers.IO) {
-
                     val result =
                         if (edit) {
                             errorMessage =
@@ -107,6 +112,34 @@ class EditTransactionDialog(
         }
 
         return dialog
+    }
+
+    override fun onStart() {
+        super.onStart()
+        saveButton = (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
+        saveButton?.isEnabled = validateFields()
+        fieldsListeners()
+    }
+
+    private fun fieldsListeners() {
+        binding.apply {
+            tietAmount.addTextChangedListener { saveButton?.isEnabled = validateFields() }
+            tietDescription.addTextChangedListener { saveButton?.isEnabled = validateFields() }
+            tietDate.addTextChangedListener { saveButton?.isEnabled = validateFields() }
+            accountSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    saveButton?.isEnabled = validateFields()
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -147,6 +180,10 @@ class EditTransactionDialog(
         binding.accountSpinner.apply {
             adapter = spinnerAdapter
         }
-
     }
+
+    private fun validateFields(): Boolean = binding.tietAmount.text.toString().isNotBlank() &&
+            binding.tietDescription.text.toString().isNotBlank() &&
+            binding.tietDate.text.toString().isNotBlank() &&
+            binding.accountSpinner.selectedItemPosition != 0
 }

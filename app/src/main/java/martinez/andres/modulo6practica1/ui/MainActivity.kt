@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     private fun initUI() {
         initRV()
         initListeners()
+        updateRV()
     }
 
     private fun initRV() {
@@ -54,7 +55,6 @@ class MainActivity : AppCompatActivity() {
             adapter = transactionAdapter
             layoutManager = LinearLayoutManager(this@MainActivity)
         }
-        updateRV()
     }
 
     private fun updateRV() {
